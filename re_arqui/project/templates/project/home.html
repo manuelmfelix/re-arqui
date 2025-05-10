@@ -1,0 +1,37 @@
+{% extends 'project/base.html' %}
+{% load static %}
+
+{% block title %}RE-ARQUI | Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'project/css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="masonry-grid">
+  {% for project in projects %}
+    <a href="{% url 'project' project.id %}" class="project-card">
+      <div class="project-image-container">
+        {% if project.cover_image %}
+          <img src="{{ project.cover_image }}" alt="{{ project.name }}" class="project-image">
+        {% else %}
+          <div class="no-image">No Image</div>
+        {% endif %}
+        <div class="project-overlay">
+          <h2 class="project-title">{{ project.name }}</h2>
+          <p class="project-year">{% if project.construction_year %}{{ project.construction_year }}{% elif project.project_year %}{{ project.project_year }}{% endif %}</p>
+          <p class="project-architect">{{ project.architect }}</p>
+        </div>
+      </div>
+    </a>
+  {% empty %}
+    <div class="no-projects">
+      <p>No projects available.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'project/js/masonry.js' %}"></script>
+{% endblock %} 

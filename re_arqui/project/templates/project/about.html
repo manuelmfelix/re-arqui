@@ -1,0 +1,33 @@
+{% extends 'project/base.html' %}
+{% load static %}
+
+{% block title %}About | RE-ARQUI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'project/css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+  <div class="about-logo">
+    <img src="{% static 'project/images/logo.png' %}" alt="RE-ARQUI" class="about-logo-image">
+  </div>
+  
+  <div class="about-content">
+    <div class="mission">
+      <h2>Sobre</h2>
+      <p>Desde 1987, Rita Dias e Nuno Félix, têm desenvolvido vários projetos individualmente ou em parceria.</br>
+      Nas áreas de habitação e serviços, os seus trabalhos vão desde os projetos de raiz, aos projetos de remodelação e reabilitação.</br>
+      A Re-Arqui pretende por um lado ser um repositório dos trabalhos desenvolvidos, dando ao mesmo tempo a conhece-los ao público.</br>
+      </p></br>
+      <p>Contam desde 2020 com um novo departamento de 3dModel no qual desenvolvem em modelação 3D e rendering, os seus próprios projetos, bem como projetos de outros ateliers.</br>
+        Com uma equipa renovada e mais ampla, desenvolvem igualmente projetos de design de interiores e de engenharia de estruturas, águas e esgotos, .....</p></br>
+      <h2>Contactos</h2>
+      <p>Morada: Rua Cidade de Braga 249 dt. 2775-308 Parede, Portugal</p>
+      <p>Mail: geral@re-arqui.pt</p>
+      <p>Telefone: +351 919 671 778</p>
+      <p>Telefone: +351 919 737 321</p>
+    </div>
+  </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RE-ARQUI{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'project/css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+  <link rel="icon" href="{% static 'project/favicon.ico' %}">
+</head>
+<body class="{% if header_visible %}header-visible{% endif %}">
+  <header>
+    <div class="logo">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'project/images/logo.png' %}" alt="RE-ARQUI" class="logo-image">
+      </a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>&copy; {{ now.year }} RE-ARQUI</footer>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html> 

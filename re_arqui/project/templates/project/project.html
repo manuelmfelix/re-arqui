@@ -1,0 +1,96 @@
+{% extends 'project/base.html' %}
+{% load static %}
+
+{% block title %}{{ project.name }} | RE-ARQUI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'project/css/project.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="project-container">
+  {% if project.cover_image %}
+  <div class="main-image-container">
+    <img src="{{ project.cover_image }}" alt="{{ project.name }}" class="main-image">
+  </div>
+  {% endif %}
+  
+  <div class="project-info">
+    <div class="project-metadata">
+      <h1 class="project-title">{{ project.name }}</h1>
+      
+      <div class="metadata-grid">
+        <div class="metadata-column">
+          <div class="metadata-item">
+            <h3>Architect</h3>
+            <p>{{ project.architect }}</p>
+          </div>
+          
+          <div class="metadata-item">
+            <h3>Builder</h3>
+            <p>{{ project.builder }}</p>
+          </div>
+          
+          <div class="metadata-item">
+            <h3>Client</h3>
+            <p>{{ project.client }}</p>
+          </div>
+        </div>
+        
+        <div class="metadata-column">
+          <div class="metadata-item">
+            <h3>Site</h3>
+            <p>{{ project.site }}</p>
+          </div>
+          
+          {% if project.project_year %}
+          <div class="metadata-item">
+            <h3>Project Year</h3>
+            <p>{{ project.project_year }}</p>
+          </div>
+          {% endif %}
+          
+          {% if project.construction_year %}
+          <div class="metadata-item">
+            <h3>Construction Year</h3>
+            <p>{{ project.construction_year }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    {% if project.description %}
+    <div class="project-description">
+      {{ project.description|safe }}
+    </div>
+    {% endif %}
+  </div>
+  
+  {% if photos %}
+  <div class="gallery-container">
+    <div class="gallery-grid">
+      {% for photo in photos %}
+      <div class="gallery-item">
+        <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="gallery-image" data-photo-id="{{ photo.id }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+  <div class="fullscreen-viewer" id="fullscreen-viewer">
+    <div class="fullscreen-close">&times;</div>
+    <div class="fullscreen-content">
+      <button type="button" class="fullscreen-nav fullscreen-prev" title="Previous Image">&#10094;</button>
+      <img src="" alt="" id="fullscreen-image">
+      <button type="button" class="fullscreen-nav fullscreen-next" title="Next Image">&#10095;</button>
+    </div>
+    <div class="fullscreen-caption" id="fullscreen-caption"></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'project/js/project.js' %}"></script>
+{% endblock %} 

@@ -1,0 +1,34 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff
+*.log
+db.sqlite3
+db.sqlite3-journal
+#media/
+
+# Production settings
+secret_key.json
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Local development settings
+.env
+
+# Static files collected
+staticfiles/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
