@@ -25,7 +25,7 @@ DEBUG = False
 
 # Updated to include Azure domain
 ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', 
-                 'www.manuelfelix.eu/teste', '*.azurewebsites.net', "www.manuelfelix.eu/teste"]
+                 'www.manuelfelix.eu/teste', '*.azurewebsites.net']
 
 # Database
 # Use SQLite database in production for simplicity
