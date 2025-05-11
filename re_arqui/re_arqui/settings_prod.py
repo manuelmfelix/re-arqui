@@ -21,7 +21,7 @@ except FileNotFoundError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Enable debug temporarily to diagnose issues
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', "www.manuelfelix.eu/teste"]
 
