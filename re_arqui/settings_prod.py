@@ -40,6 +40,9 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Override STATICFILES_DIRS to prevent Django from looking for non-existent directories
+STATICFILES_DIRS = []
+
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

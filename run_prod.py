@@ -14,7 +14,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "re_arqui.settings_prod"
 
 def run_django():
     """Run Django development server with production settings"""
-    django_cmd = ['python', 'manage.py', 'runserver', '127.0.0.1:8000']
+    django_cmd = [sys.executable, 'manage.py', 'runserver', '127.0.0.1:8000']
     process = subprocess.Popen(
         django_cmd,
         stdout=subprocess.PIPE,
@@ -24,15 +24,19 @@ def run_django():
     return process
 
 def run_fastapi():
-    """Run FastAPI server with uvicorn"""
+    """Run FastAPI server with uvicorn using Python module method"""
+    # This avoids permission issues with uvicorn as a direct command
     fastapi_cmd = [
-        'uvicorn', 
-        'project.api:app', 
-        '--host', '127.0.0.1', 
-        '--port', '8001',
-        '--reload-dir', 'project',  # Only watch the project directory for changes
-        '--log-level', 'info'  # More detailed logging
+        sys.executable,
+        '-c',
+        '''
+import uvicorn
+import os
+os.environ["DJANGO_SETTINGS_MODULE"] = "re_arqui.settings_prod"
+uvicorn.run("project.api:app", host="127.0.0.1", port=8001, reload=True, reload_dirs=["project"], log_level="info")
+        '''
     ]
+    
     process = subprocess.Popen(
         fastapi_cmd,
         stdout=subprocess.PIPE,
