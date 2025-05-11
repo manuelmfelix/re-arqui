@@ -22,13 +22,16 @@ from .models import Project, Photo
 # Check if we're in production by looking for the production settings module
 is_production = os.environ.get("DJANGO_SETTINGS_MODULE") == "re_arqui.settings_prod"
 
-# FastAPI instance with production-appropriate configuration
-if is_production:
-    # In production, FastAPI is expected to be accessed at /api prefix due to Nginx configuration
-    app = FastAPI(title="RE-ARQUI API", root_path="/api")
-else:
-    # In development, FastAPI is accessed directly
-    app = FastAPI(title="RE-ARQUI API")
+# FastAPI instance with unified configuration for development and simplified production testing
+# Remove the root_path="/api" which only works with a proper reverse proxy
+app = FastAPI(
+    title="RE-ARQUI API",
+    description="API for RE-ARQUI Architecture Project",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
+)
 
 # Authentication scheme
 security = HTTPBearer()

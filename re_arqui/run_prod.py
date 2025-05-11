@@ -1,93 +1,101 @@
 """
-Script to run both Django (with Gunicorn) and FastAPI (with Uvicorn) in production
+Script to run both Django and FastAPI servers with production settings.
+This is a simplified version that runs both servers directly, similar to run.py.
 """
 import os
 import sys
 import subprocess
 import signal
 import time
-from threading import Thread
+import threading
 
 # Set production environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "re_arqui.settings_prod")
+os.environ["DJANGO_SETTINGS_MODULE"] = "re_arqui.settings_prod"
 
 def run_django():
-    """Run the Django server with Gunicorn"""
-    # Gunicorn command with appropriate settings
-    django_process = subprocess.Popen([
-        'gunicorn',
-        '--bind', '127.0.0.1:8000',
-        '--workers', '3',
-        '--timeout', '120',
-        '--access-logfile', 'gunicorn_access.log',
-        '--error-logfile', 'gunicorn_error.log',
-        're_arqui.wsgi:application'
-    ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
-    return django_process
+    """Run Django development server with production settings"""
+    django_cmd = ['python', 'manage.py', 'runserver', '127.0.0.1:8000']
+    process = subprocess.Popen(
+        django_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True
+    )
+    return process
 
 def run_fastapi():
-    """Run the FastAPI server with uvicorn"""
-    # Import after setting the environment variable
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "re_arqui.settings_prod")
-    
-    # Run FastAPI with uvicorn
-    fastapi_process = subprocess.Popen([
-        'uvicorn',
-        'project.api:app',
-        '--host', '127.0.0.1',
+    """Run FastAPI server with uvicorn"""
+    fastapi_cmd = [
+        'uvicorn', 
+        'project.api:app', 
+        '--host', '127.0.0.1', 
         '--port', '8001',
-        '--workers', '2',
-        '--log-level', 'warning',
-        '--log-file', 'uvicorn.log'
-    ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
-    return fastapi_process
+        '--reload-dir', 'project',  # Only watch the project directory for changes
+        '--log-level', 'info'  # More detailed logging
+    ]
+    process = subprocess.Popen(
+        fastapi_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True
+    )
+    return process
 
-def handle_output(process, prefix, logfile):
-    """Log process output to a file"""
-    with open(logfile, 'a') as log:
-        for line in iter(process.stdout.readline, ""):
-            if not line:
-                break
-            log.write(f"{prefix}: {line}")
-            log.flush()
+def print_output(process, prefix):
+    """Print output from a process with a prefix"""
+    for line in iter(process.stdout.readline, ""):
+        if line:
+            print(f"{prefix}: {line.strip()}")
 
 def main():
-    """Main function to run both servers"""
-    print("Starting Django and FastAPI servers in production mode...")
+    """Start both servers and manage their processes"""
+    print("\n=== Starting RE-ARQUI Production Servers ===\n")
     
-    # Start Django with Gunicorn
+    # Start the Django server
     django_process = run_django()
-    print("Django server (Gunicorn) started on http://127.0.0.1:8000")
+    print("Django server started on http://127.0.0.1:8000")
     
-    # Start FastAPI with Uvicorn
+    # Start the FastAPI server
     fastapi_process = run_fastapi()
-    print("FastAPI server (Uvicorn) started on http://127.0.0.1:8001")
+    print("FastAPI server started on http://127.0.0.1:8001")
+    print("FastAPI docs available at http://127.0.0.1:8001/docs")
+    print("FastAPI OpenAPI schema at http://127.0.0.1:8001/openapi.json")
     
-    # Function to clean up processes
+    # Set up threads to print output
+    django_thread = threading.Thread(
+        target=print_output,
+        args=(django_process, "Django"),
+        daemon=True
+    )
+    django_thread.start()
+    
+    fastapi_thread = threading.Thread(
+        target=print_output,
+        args=(fastapi_process, "FastAPI"),
+        daemon=True
+    )
+    fastapi_thread.start()
+    
+    print("\n=== Both servers are now running ===")
+    print("Access Django: http://127.0.0.1:8000")
+    print("Access FastAPI: http://127.0.0.1:8001/docs")
+    print("Press Ctrl+C to stop all servers")
+    
+    # Handle graceful shutdown
     def signal_handler(sig, frame):
         print("\nShutting down servers...")
         django_process.terminate()
         fastapi_process.terminate()
+        print("Servers stopped.")
         sys.exit(0)
     
-    # Register signal handlers for graceful shutdown
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    # Log Django output
-    django_thread = Thread(target=handle_output, args=(django_process, "Django", "django_output.log"))
-    django_thread.daemon = True
-    django_thread.start()
-    
-    # Log FastAPI output
-    fastapi_thread = Thread(target=handle_output, args=(fastapi_process, "FastAPI", "fastapi_output.log"))
-    fastapi_thread.daemon = True
-    fastapi_thread.start()
-    
+    # Keep the script running
     try:
-        # Keep the main thread alive
         while True:
-            time.sleep(1)
+            time.sleep(0.1)
     except KeyboardInterrupt:
         signal_handler(None, None)
 
