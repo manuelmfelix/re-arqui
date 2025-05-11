@@ -1,0 +1,6 @@
+{
+    "app_type": "wsgi",
+    "startup_file": "passenger_wsgi.py",
+    "python": "/home/rearquip/venv/bin/python",
+    "environment": "production"
+  }
