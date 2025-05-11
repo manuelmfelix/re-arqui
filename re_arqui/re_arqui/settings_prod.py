@@ -26,7 +26,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rearqui_db',
         'USER': 'rearqui_dbuser',
-        'PASSWORD': '',  # Set this in the production environment
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),  # Set this in the production environment
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
