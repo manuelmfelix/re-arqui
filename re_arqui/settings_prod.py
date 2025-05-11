@@ -23,7 +23,9 @@ except FileNotFoundError:
 # Enable debug temporarily to diagnose issues
 DEBUG = False
 
-ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', "www.manuelfelix.eu/teste"]
+# Updated to include Azure domain
+ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', 
+                 'www.manuelfelix.eu/teste', '*.azurewebsites.net', "www.manuelfelix.eu/teste"]
 
 # Database
 # Use SQLite database in production for simplicity
@@ -41,6 +43,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Update middleware for Azure and add WhiteNoise
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this for Azure
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'project.middleware.BrokenPipeErrorMiddleware',
+]
+
+# Add WhiteNoise static files storage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings - balanced for functionality
 # These settings provide security without breaking local development

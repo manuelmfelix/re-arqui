@@ -5,8 +5,8 @@ __pycache__/
 
 # Django stuff
 *.log
-db.sqlite3
-db.sqlite3-journal
+#db.sqlite3
+##db.sqlite3-journal
 #media/
 
 # Production settings
@@ -21,7 +21,7 @@ ENV/
 .env
 
 # Static files collected
-staticfiles/
+#staticfiles/
 
 # OS specific files
 .DS_Store
@@ -32,3 +32,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Other
+settings.py
+run.py

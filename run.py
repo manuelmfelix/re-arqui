@@ -29,7 +29,7 @@ def run_fastapi():
     
     # Run FastAPI with uvicorn in a separate process
     fastapi_process = subprocess.Popen(
-        ['uvicorn', 'project.api:app', '--host', '127.0.0.1', '--port', '8001'],
+        [sys.executable, '-m', 'uvicorn', 'project.api:app', '--host', '127.0.0.1', '--port', '8001'],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         universal_newlines=True

@@ -1,5 +1,0 @@
--r requirements.txt
-gunicorn==21.2.0
-supervisor==4.2.5
-python-dotenv==1.0.0
-whitenoise==6.5.0 
