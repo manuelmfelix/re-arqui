@@ -21,7 +21,7 @@ except FileNotFoundError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Enable debug temporarily to diagnose issues
-DEBUG = False
+DEBUG = True  # Temporarily set to True to help with media files serving
 
 # Updated to include Azure domain
 ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', 
