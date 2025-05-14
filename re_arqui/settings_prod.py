@@ -21,7 +21,7 @@ except FileNotFoundError:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Enable debug temporarily to diagnose issues
-DEBUG = False  # Temporarily set to True to help with media files serving
+DEBUG = False  # Set to False for production
 
 # Updated to include Azure domain
 ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', 
@@ -62,6 +62,13 @@ MIDDLEWARE = [
 
 # Add WhiteNoise static files storage
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Configure WhiteNoise to serve media files in production
+WHITENOISE_AUTOREFRESH = True
+WHITENOISE_USE_FINDERS = False
+
+# Tell WhiteNoise where to find media files
+WHITENOISE_ROOT = MEDIA_ROOT
 
 # Security settings - balanced for functionality
 # These settings provide security without breaking local development
