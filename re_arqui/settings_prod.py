@@ -9,6 +9,10 @@ import json
 # Import base settings
 from .settings import *
 
+# Production-specific paths
+PROD_STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_prod')
+PROD_MEDIA_ROOT = os.path.join(BASE_DIR, 'media_prod')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # Read secret key from a file
 try:
@@ -20,12 +24,17 @@ except FileNotFoundError:
     print("WARNING: Using development secret key in production!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Enable debug temporarily to diagnose issues
-DEBUG = True  # Temporarily enable DEBUG to help with media files
+DEBUG = True
 
-# Updated to include Azure domain
-ALLOWED_HOSTS = ['re-arqui.pt', 'www.re-arqui.pt', 'localhost', '127.0.0.1', 
-                 'www.manuelfelix.eu/teste', '*.azurewebsites.net']
+# Updated to include both domains
+ALLOWED_HOSTS = [
+    're-arqui.pt',
+    'www.re-arqui.pt',
+    'manuelfelix.eu',
+    'www.manuelfelix.eu',
+    'localhost',
+    '127.0.0.1'
+]
 
 # Database
 # Use SQLite database in production for simplicity
@@ -38,76 +47,70 @@ DATABASES = {
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Override STATICFILES_DIRS to prevent Django from looking for non-existent directories
-STATICFILES_DIRS = []
+STATIC_ROOT = PROD_STATIC_ROOT  # Production static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Enable static files directory
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = PROD_MEDIA_ROOT  # Production media files
 
-# Update middleware for Azure and add WhiteNoise
+# Update middleware for production
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this for Azure
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'project.middleware.BrokenPipeErrorMiddleware',
 ]
 
 # Add WhiteNoise static files storage
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'  # Use a simpler storage class
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Security settings - balanced for functionality
-# These settings provide security without breaking local development
-CSRF_COOKIE_SECURE = False  # Set to True only when HTTPS is properly configured
-SESSION_COOKIE_SECURE = False  # Set to True only when HTTPS is properly configured
-SECURE_SSL_REDIRECT = False  # Set to True only when HTTPS is properly configured
+# Security settings
+CSRF_COOKIE_SECURE = False  # Temporarily disabled for local testing
+SESSION_COOKIE_SECURE = False  # Temporarily disabled for local testing
+SECURE_SSL_REDIRECT = False  # Temporarily disabled for local testing
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
-# Add security headers that don't require HTTPS
-X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
-SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
-SECURE_BROWSER_XSS_FILTER = True  # Enable XSS protection in browsers
+# Additional security headers
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 
 # FastAPI settings
 FASTAPI_PORT = 8001
 
-# Improved logging with console output for better debugging
+# Improved logging with more detailed output
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_prod.log'),
             'formatter': 'verbose',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'gunicorn': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
             'propagate': True,
         },
     },

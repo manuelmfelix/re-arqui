@@ -1,5 +1,7 @@
 """
-Script to run both Django and FastAPI together
+Script to run both Django and FastAPI together in development mode.
+WARNING: This script is for development purposes only.
+Any media uploads should be done in development mode.
 """
 import os
 import sys
@@ -18,7 +20,7 @@ def run_django():
     return django_process
 
 def run_fastapi():
-    """Run the FastAPI server with uvicorn"""
+    """Run the FastAPI server with uvicorn (development only)"""
     # Set environment variable for Django settings
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "re_arqui.settings")
     
@@ -44,8 +46,11 @@ def handle_output(process, prefix):
         print(f"{prefix}: {line.strip()}")
 
 def main():
-    """Main function to run both servers"""
-    print("Starting Django and FastAPI servers...")
+    """Main function to run both servers in development mode"""
+    print("\n=== Starting RE-ARQUI Development Servers ===")
+    print("WARNING: This is development mode only.")
+    print("Any media uploads should be done in development mode.")
+    print("For production, use run_prod.py instead.\n")
     
     # Start Django
     django_process = run_django()
@@ -54,10 +59,11 @@ def main():
     # Start FastAPI
     fastapi_process = run_fastapi()
     print("FastAPI server started on http://127.0.0.1:8001")
+    print("FastAPI docs available at http://127.0.0.1:8001/docs")
     
     # Function to clean up processes
     def signal_handler(sig, frame):
-        print("\nShutting down servers...")
+        print("\nShutting down development servers...")
         django_process.terminate()
         fastapi_process.terminate()
         sys.exit(0)

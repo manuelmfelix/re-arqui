@@ -18,7 +18,8 @@ def home(request):
     
     return render(request, 'project/home.html', {
         'projects': projects,
-        'header_visible': True
+        'header_visible': True,
+        'now': timezone.now()
     })
 
 def project(request, project_id):
@@ -28,7 +29,8 @@ def project(request, project_id):
     return render(request, 'project/project.html', {
         'project': project,
         'photos': photos,
-        'header_visible': True
+        'header_visible': True,
+        'now': timezone.now()
     })
 
 def about(request):
