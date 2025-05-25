@@ -24,7 +24,7 @@ except FileNotFoundError:
     print("WARNING: Using development secret key in production!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Updated to include both domains
 ALLOWED_HOSTS = [
