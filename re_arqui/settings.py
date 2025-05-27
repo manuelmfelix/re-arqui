@@ -12,24 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Development-specific paths
-DEV_STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_dev')
-DEV_MEDIA_ROOT = os.path.join(BASE_DIR, 'media_dev')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r&srhojw&cb=1lrwp90vy0)#%_c4!c*(&k#@gan+*8^c!49)d@'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 're_arqui.pt', '*.azurewebsites.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 're_arqui.pt', '*.azurewebsites.net', 'manuelfelix.eu']
 
 
 # Application definition
@@ -126,12 +125,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = DEV_STATIC_ROOT  # Development static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Development static files
 # STATICFILES_DIRS is not needed as static files are in project/static/
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = DEV_MEDIA_ROOT  # Development media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Development media files
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -150,50 +149,3 @@ REST_FRAMEWORK = {
 
 # FastAPI settings
 FASTAPI_MOUNT_PATH = '/api'
-
-# Logging configuration to handle broken pipe errors
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-        'ignore_broken_pipe': {
-            '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: 'Broken pipe' not in record.getMessage(),
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true', 'ignore_broken_pipe'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'file': {
-            'level': 'WARNING',
-            'filters': ['ignore_broken_pipe'],
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django.log'),
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
