@@ -28,10 +28,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 're_arqui.pt', '*.azurewebsites.net',
-                 'manuelfelix.eu',
-                 'manuelfelix.eu/re_arqui',
-                 'manuelfelix.eu/rearqui']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 're-arqui.pt', '*.azurewebsites.net',
+                 'manuelfelix.eu']
 
 
 # Application definition
